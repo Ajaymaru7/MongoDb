@@ -1,0 +1,205 @@
+Assignment-1
+
+//Insert Document using insertOne()
+
+Employee> db.emp.insertOne({_id:1,emp_name:"Ajay",emp_age:22,emp_salary:100000,emp_dept:"IT"})
+{ acknowledged: true, insertedId: 1 }
+Employee> db.emp.insertOne({_id:2,emp_name:"Pranav",emp_age:23,emp_salary:60000,emp_dept:"IT"})
+{ acknowledged: true, insertedId: 2 }
+Employee> db.emp.insertOne({_id:3,emp_name:"Vishal",emp_age:23,emp_salary:85000,emp_dept:"Finance"})
+{ acknowledged: true, insertedId: 3 }
+Employee> db.emp.insertOne({_id:4,emp_name:"Sanjana",emp_age:20,emp_salary:55000,emp_dept:"Marketing"})
+{ acknowledged: true, insertedId: 4 }
+
+//Insert Record using insertMany()
+ db.Test1.insertMany([{id:105,emp_name:"Viraj",emp_age:19,emp_salary:50000,emp_dept:"Finance"},{id:106,emp_name:"Harshrajsinh",emp_age:27,emp_salary:70000,emp_dept:"Admin"},{id:107,emp_name:"Irien",emp_age:29,emp_salary:120000,emp_dept:"R&D"},{id:108,emp_name:"Priya",emp_age:29,emp_salary:220000,emp_dept:"Cyber-Security"},{id:109,emp_name:"Raj",emp_age:31,emp_salary:1400000,emp_dept:"FullStackDeveloper"},{id:110,emp_name:"Kush",emp_age:32,emp_salary:1600000,emp_dept:"Ethical-Hacking"}])
+
+//Update Document using updateOne()
+Employee> db.Movies.updateOne({title:"Hanuman"},{$set:{title:"HANUMAN"},})
+
+//update the name of employee to the fullname
+Employee> db.emp.updateOne({emp_name:"Ajay"},{$set:{emp_name:"Ajay Maru"},})
+
+//Delete the record where emp_dept is Operation.
+Employee> db.emp.deleteMany({emp_dept:"Finance"})
+
+//Add the new column emp_joiningDate and fill all the documents with same name.
+Employee> db.emp.updateMany({},{$set:{emp_joiningDate:"03-02-2023"},})
+
+// Show the records after performing all the Operations.
+db.emp.find()
+
+Assignment-2
+
+// Create a database named petshop
+use Petshop
+
+// Create a collection named pet and add multiple document
+Petshop> db.petshop.insertMany([{name: "Mikey", species: "Gerbil"}, {name: "Davey Bungooligan", species: "Piranha"}, {name: "Suzy B", species: "Cat"}, {name: "Mikey",species: "Hotdog"}, {name: "Terrence",species: "Sausagedog"}, {name: "Philomena Jones", species: "Cat"}])
+
+//Add another piranha and name it as Tabby, and a naked mole rat called Henry
+Petshop> db.petshop.insertOne({name: 'Tebby', species: 'Piranha'})
+Petshop> db.petshop.insertOne({name: 'Henry', species: 'naked mole rat'})
+
+//Use find to list all the pets.
+Petshop> db.petshop.find()
+
+// Find the ID of Mikey the Gerbil.
+Petshop>  db.petshop.find({name:"Mikey",species:"Gerbil"})
+
+//. Use find to find all the gerbils.
+Petshop> db.petshop.find({species:'Gerbil'})
+
+// Find all the creatures named Mikey.
+Petshop> db.petshop.find({name:'Mikey'})
+
+//Find all the creatures named Mikey who are Hotdog.
+Petshop> db.petshop.find({ name: "Mikey", species: "Hotdog" })
+
+// Update the name of Suzy B to Suzy.
+Petshop> db.petshop.updateOne({name: 'Suzy B'}, {$set: {name: 'Suzy'}})
+
+// Delete the pet whose species is “Hotdog”.
+Petshop> db.petshop.deleteOne({ species: "Hotdog" })
+
+Assignment-3
+
+//get all documents where actors include "Brad Pitt"
+admin> db.admin.find({actor:"Brad Pitt"})
+
+//get all movies released in the 90s
+admin> db.admin.find({year:{$gte: 1990, $lt: 2000},})
+
+//get all movies released before the year 2000 or after 2010
+admin> db.admin.find({$or:[{year: {$lt: 2000}}, {year: {$gt: 2010}},]})
+
+//delete the movie "Avatar"
+admin> db.admin.deleteOne({title:"Avatar"})
+
+//add a synopsis to "The Hobbit: An Unexpected Journey" : "A reluctant hobbit, Bilbo Baggins, sets out to the Lonely Mountain with a spirited group of dwarves to reclaim their mountain home - and the gold within it - from the dragon Smaug."
+admin> db.admin.insertOne({ title: "The Hobbit: An Unexpected Journey",  plot: "A reluctant hobbit, Bilbo Baggins, sets out to the Lonely Mountain with a spirited group of dwarves to reclaim their mountain home - and the gold within it - from the dragon Smau" })
+
+//add an actor named "Samuel L. Jackson" to the movie "Pulp Fiction"
+admin> db.admin.updateOne({title:'Pulp Fiction'}, {$addToSet: {actor: "Samuel L. Jackson"}})
+
+Assignment-4
+
+1. Write a MongoDB query to display all the documents in the collection restaurants.
+Restaurant> use DB_Restaurant
+switched to db DB_Restaurant
+DB_Restaurant> db.Restaurant.find()
+
+2. Write a MongoDB query to display the fields restaurant_id, name, borough and cuisine for all the documents in the collection restaurant.
+DB_Restaurant> db.Restaurant.find({},{"restaurant_id":1, "name":1, "borough":1, "cuisine":1, "_id":0})
+
+3. Write a MongoDB query to display all the restaurant which is in the borough Bronx.
+DB_Restaurant> db.Restaurant.find({},{"restaurant_id":1, "name":1, "borough":1, "cuisine":1, "_id":0}).skip(0).limit(5)
+
+4. Write a MongoDB query to display the fields restaurant_id, name, borough and cuisine, but exclude the field _id for all the documents in the collection restaurant.
+Use skip & limit
+-> db.Restaurant.find({}, { "_id": 0, "restaurant_id": 1, "name": 1, "borough": 1, "cuisine": 1 }).skip(10).limit(5)
+
+5. Write a MongoDB query to display the first 5 restaurant which is in the borough Bronx
+-> db.Restaurant.find({ "borough": "Bronx" }).limit(5)
+
+6. Write a MongoDB query to display the next 5 restaurants after skipping first 5 which are in the borough Bronx
+Use $lt, $gt, $and, $ne,
+-> db.Restaurant.find({$and: [{ "borough": "Bronx" },{ "_id":0, { $gt: db.restaurant.find({ "borough": "Bronx" }).sort({ "_id":1 }).limit(5).skip(4).next()."_id":1 } }]}).limit(5)
+
+7. Write a MongoDB query to find the restaurants who achieved a score more than 90
+-> DB_Restaurant> db.Restaurant.find({'grades.score': {'$gt': 90}})
+
+8. Write a MongoDB query to find the restaurants that achieved a score, more than 80 but less than 100.
+-> DB_Restaurant> db.Restaurant.find({'grades.score': {'$gt': 80,'$lt': 100 }})
+
+9. Write a MongoDB query to find the restaurants that do not prepare any cuisine of 'American' and their grade score more than 70 and latitude less than -65.754168.
+->  db.Restaurant.find({$and:[{"cuisine":{$ne:"American"}},{"grades.score":{$gt:70}},{"address.coord":{$lt:-65.754168}}]});
+
+10. Write a MongoDB query to find the restaurants which do not prepare any cuisine of 'American' and achieved a grade point 'A' not belongs to the borough Brooklyn. The document must be displayed according to the cuisine in descending order 
+->  db.restaurants.find( {"cuisine" : {$ne : "American"},"grades.grade" :"A","borough": {$ne : "Brooklyn"}}).sort({"cuisine":-1});
+
+11. Write a MongoDB query to find the restaurant Id, name, borough and cuisine for those restaurants which contain 'Wil' as first three letters for its name
+->  db.Restaurant.find({ "name": { $regex: /^Wil/i } },{ "_id": 1, "name": 1, "borough": 1, "cuisine": 1 })
+
+12. Write a MongoDB query to find the restaurant Id, name, borough and cuisine for those restaurants which contain 'Reg' as three letters somewhere in its name.
+->  db.Restaurant.find({ "name": { $regex: /Reg/i } },{ "_id": 1, "name": 1, "borough": 1, "cuisine": 1 })
+
+13. Write a MongoDB query to find the restaurants which belong to the borough Bronx and prepared either American or Chinese dish
+->  db.Restaurant.find({"borough": "Bronx" ,$or : [{ "cuisine" : "American " },{ "cuisine" : "Chinese" }]})
+
+14. Write a MongoDB query to find the restaurant Id, name, borough and cuisine for those restaurants which prepared dish except 'American' and 'Chinees' or restaurant's name begins with letter 'Wil'
+->  db.Restaurant.find({$or: [{name: /^Wil/},{"$and": [{"cuisine" : {$ne :"American "}},{"cuisine" :      {$ne :"Chinees"}}]}]},{"restaurant_id" : 1,"name":1,"borough":1,"cuisine" :1})
+
+15. Write a MongoDB query to find the restaurant Id, name, and grades for those restaurants which achieved a grade of "A" and scored 11 on an ISODate "2014-08-11T00:00:00Z" among many of survey dates.
+->  db.Restaurant.find({"grades": {$elemMatch: {"grade": "A","score": 11,"date": ISODate("2014-08-11T00:00:00Z")}},"address.coord.1":{ $gt: 42, $lte: 52 }},{"_id": 1,"name": 1,"grades": 1})
+
+16. Write a MongoDB query to find the restaurant Id, name, address and geographical location for those restaurants where 2nd element of coord array contains a value which is more than 42 and upto 52.
+->  db.Restaurant.find({ "address.coord.1": { $gt: 42, $lte: 52 } },{ "_id": 1, "name": 1, "address": 1, "address.coord": 1 }).sort({ "address.coord.1": 1 })
+
+17. Write a MongoDB query to arranged the name of the cuisine in ascending order.
+->  db.Restaurant.find({ "cuisine": { $exists: true } },{ "_id": 1, "name": 1, "cuisine": 1 }).sort({ "cuisine": 1 })
+
+18. Write a MongoDB query to know whether all the addresses contains the street or not.
+->  db.Restaurant.find({"address.street": { $exists: true, $ne: null }}).count() === db.your_collection_name.count()
+
+Assignment-5
+
+1. The movies titled "Gladiator".
+-> db.movie.find({ "title": "Gladiator" })
+
+2. The distinct genre values of movies.
+-> db.movie.distinct("genre")
+
+3. The movies of "crime" or "drama" genre.
+-> db.movie.find({ "genre": { $in: ["crime", "drama"] } })
+
+4. The list of movies directed by "Hitchcock",display only title and year andsort them by year.
+-> db.movie.find({ "director": last_name: "Hitchcock" },{ "_id": 0, "title": 1, "year": 1 }).sort({ "year": 1 })
+
+5. The list of movies where "Cotillard" played.
+-> db.movie.find({actor:$eleMatch, {name: "Cotillard"}}) (Not Working)
+
+6. The movies released between 1967 and 1995.
+-> db.movie.find({ "year": { $gte: 1967, $lte: 1995 } })
+
+7. The list of the movies released between 1967 and 1995, by displaying only title, year,
+director’s last name sorted by year
+-> db.movie.find({ "year": { $gte: 1967, $lte: 1995 } },{ "_id": 0, "title": 1, "year": 1, "director": { $arrayElemAt: [{ $split:["$director", " "] }, -1] } }).sort({ "year": 1 })
+
+8. The number of movies by country.
+-> db.movie.aggregate([{$group: {_id: "$country",count: { $sum: 1 }}},{$project: {_id: 0,country: "$_id",movie_count: "$count"}}])
+
+9. The number of movies by country and actor
+-> db.movie.aggregate([{$unwind: "$actors"},{$group: {_id: {country: "$country",actor: "$actors"},count: { $sum: 1 }}},{$project: {_id:0,country: "$_id.country",actor: "$_id.actor",movie_count: "$count"}}])
+
+Assignment-6
+
+1. create a new database called employee_db (use employee_db)
+-> use employee_db
+
+2. create a collection called employee_info (db.createCollection("employee_info")
+-> db.createCollection("employee_info")
+
+3. confirm that the collection was successfully created.
+->  show collections
+
+4. Insert one it into our collection, use insertOne()
+-> db.employee_info.insertOne({"fname": "john", "lname": "doe", "salary": 70000, "departments": ["sales", "admin"], "hiredate": "2018-08-29"})
+
+5. Use insertMany()
+-> db.employee_info.insertMany([{empno: 1,fname: "charlie",lname: "rodgers",role: "manager",departments: ["sales", "marketing"]},{empno: 2,fname: "sunil",lname: "chakraborty",role: "team lead",departments: ["marketing", "finance"]},{empno: 3,fname: "sally",lname: "jones",role: "team lead",departments: ["hr", "admin"]},{empno: 4,fname: "ben",lname: "bradley",role: "manager",departments: ["legal"]},{empno: 5,fname: "radha",lname: "desai",role: "worker"},{empno: 6,fname: "shruti",lname: "patel",role: "worker"},{empno: 7,fname: "mahesh",lname: "iyer",role: "manager"}])
+
+6. Also insert following records:
+-> db.employee_info.insertMany([{"name": "Harry Potter","title": "Wizard","interesting_fact": "I kicked the sh*t out of Voldemort!","address": "Hogwarts castle"},{"name": "Groot","title": "Superhero","interesting_fact": "I can only say 3 words in this order: 'I am Groot'!","address": "Planet X"},{"name": "Pikachu","title": "Electric type pokemon","interesting_fact": "Want to see my ThuderBolt and Quick Attack?!","address": "Pallet Town"}])
+
+7. count the number of documents in the collection
+-> db.employee_info.countDocuments()
+
+8. get a count of unique values in a given field, replace count() with distinct() and enter a field value of your choice as the first argument.
+-> db.employee_info.distinct("role").length
+-> db.employee_info.aggregate([{$group: {_id: "$role",count: { $sum: 1 }}},{ $count: "CEO"}])
+
+use test
+for(i = 0; i < 20000; i++) {
+ db.numbers.insert({num: i});
+ }
